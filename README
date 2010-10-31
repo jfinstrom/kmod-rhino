@@ -1,0 +1,34 @@
+*************************************************************************
+                                 READ ME
+*************************************************************************
+
+These are the source packages for the Rhino kernel modules.
+
+This is *NOT* an official repo but is kept up to date by an official 
+employee. Bugs changes and suggestions reported here will get upstream.
+
+Feel free to submit pull request and bugs and I will pass all changes along.
+
+
+There are two folders as there are two branches. 
+Support for zaptel by it's maintainers has been deprecated so the zaptel
+branch is typically bug fix only. The zaptel sources build the following:
+r4fxo.ko
+rcbfx.ko
+r1t1.ko
+rxt1.ko
+
+Zaptel has been replaced by DAHDI. The maintainers of DAHDI are actively
+developing DAHDI and making feature and API changes. A bulk of the changes
+you will see will be on the DAHDI branch. 
+
+The Dahdi sources will build the following:
+rcbfx.ko
+r1t1.ko
+rxt1.ko
+
+The module r4fxo.ko was depricated in the port to DAHDI. If you wish to port
+it you are welcome to but it is no longer officialy maintained in the 
+DAHDI tree. 
+
+
