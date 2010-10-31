@@ -1,0 +1,15 @@
+obj-m += rxt1.o
+
+EXTRA_CFLAGS := -I$(src)/.. -Wno-undef
+
+rxt1-objs := rxt1_base.o GpakApi.o GpakCust.o GpakDsp.o
+
+$(obj)/rxt1_base.o: $(src)/rxt1.h $(src)/GpakApi.h $(src)/GpakCust.h
+
+$(obj)/GpakCust.o: $(src)/GpakCust.h $(src)/rxt1.h
+
+$(obj)/GpakApi.o: $(src)/GpakApi.h $(src)/GpakCust.h $(src)/rxt1.h
+
+$(obj)/GpakDsp.o: $(src)/GpakDsp.fw $(obj)/rxt1_base.o
+	@echo Making firmware object file for $(notdir $<)
+	@cd $(src) && ../build_tools/make_firmware_object $(notdir $<) $@ $(obj)/rxt1_base.o

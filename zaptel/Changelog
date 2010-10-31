@@ -1,0 +1,63 @@
+Feb 19, 2009	brycec	2.4.1
+	Updated the RCBFX gain tables in response to complaints received the
+	receive volume was too low.
+
+Jan 27, 2009	brycec	2.4.0
+	After very extensive testing, 2.3.0.0 has graduated to release 2.4.0.
+	ADID support has been added to rcbfx via the adid_map module parameter.
+	The no_ec module parameter has been added to rcbfx and rxt1
+	  to simply disable the onboard EC.
+	NLP parameters can now be specified as module parameters for rcbfx, rxt1, and r1t1.
+	Reverse polarity, but detecting and setting is fully functioning on rcbfx.
+	The rxt1 can now force master clock generation via the gen_clk parameter.
+	Fixed r1t1 to properly handle E1 codecs.
+	Fixed initial gain level registers for the rcbfx.
+	Added genmodconf to the Makefile.
+
+Jun 02, 2008	brycec	2.3.0.0
+	Version 2.3.0.0 released. This is the first beta release on our way to 
+	releasing version 2.4.0.
+	Changes include reading the line voltage on FXO interfaces,
+	support for fxotune, and new Cole's Law audio transcoding
+	on E1 interfaces using echo cancellation.
+	Note: to this major version number update signifies that
+	there is a firmware update for one or more of our cards required
+	to support these drivers. This is the R1T1 thus far, r1t1_to_40.
+
+May 09, 2008	brycec	2.2.6
+	Version 2.2.6 released. This includes all the below fixes.
+
+May 08, 2008	brycec	2.2.5.5
+	Resolved bug when unloading the R1T1 "dirty" causing a kernel
+	panic.
+	This is the sixth beta release before 2.2.6
+
+May 01, 2008	brycec	2.2.5.4
+	Fixed the soft-lockup during firmware updating.
+	Several E1 audio fixups.
+	This is the fifth beta release before 2.2.6
+
+Apr 09, 2008	brycec	2.2.5.3
+	TDM/DSP bus routing changes to resolve echo on SIP-Zap calls.
+	Increased error-resiliency for digital EC cards.
+	This is the fourth beta release before 2.2.6
+
+Apr 04, 2008	brycec	2.2.5.2
+	Resolved lockup issues with Trixbox 2.6 (and others sharing its kernel)
+	Reworked DSP communications to be more CPU-friendly. This is a result
+	 of fixing a bug causing lockups in Trixbox 2.6.
+	This is the third beta release before 2.2.6
+
+Mar 28, 2008	brycec	2.2.5.1
+	Resolved issue when using the REC on an E1. The symptom was garbled audio.
+	Several tweaks in the Makefile to keep up with the changing Kernel and
+	 Zaptel layouts.
+	Updated IRQ routines for the current Zaptel/Kernel versions.
+	This is the second beta release before 2.2.6
+
+Feb 25, 2008	brycec	2.2.5.0
+	First public changelog.
+	Resolved an issue in which under certain circumstances, when a call was hung
+	 up and echo cancellation disabled, the echo cancellation was actually disabled
+	 on another channel. This issue only affected the rxt1 driver on cards with EC.
+	This is a the first beta release before 2.2.6

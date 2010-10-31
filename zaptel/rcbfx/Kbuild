@@ -1,0 +1,26 @@
+obj-m += rcbfx.o
+
+EXTRA_CFLAGS := -I$(src)/.. -Wno-undef
+
+rcbfx-objs := rcbfx_base.o GpakApi.o GpakCust.o DspLoader.o GpakDsp10.o GpakDsp0704.o GpakDsp0708.o
+
+$(obj)/rcbfx_base.o: $(src)/rcbfx.h $(src)/GpakApi.h $(src)/GpakCust.h
+$(obj)/GpakCust.o: $(src)/GpakCust.h $(src)/rcbfx.h
+$(obj)/GpakApi.o: $(src)/GpakApi.h $(src)/GpakCust.h $(src)/rcbfx.h
+
+$(obj)/DspLoader.o: $(obj)/DspLoader.fw $(obj)/rcbfx_base.o
+	@echo Making firmware object file for $(notdir $<)
+	@cd $(src) && ../build_tools/make_firmware_object $(notdir $<) $@ $(obj)/rcbfx_base.o
+
+$(obj)/GpakDsp10.o: $(obj)/GpakDsp10.fw $(obj)/rcbfx_base.o
+	@echo Making firmware object file for $(notdir $<)
+	@cd $(src) && ../build_tools/make_firmware_object $(notdir $<) $@ $(obj)/rcbfx_base.o
+
+$(obj)/GpakDsp0704.o: $(obj)/GpakDsp0704.fw $(obj)/rcbfx_base.o
+	@echo Making firmware object file for $(notdir $<)
+	@cd $(src) && ../build_tools/make_firmware_object $(notdir $<) $@ $(obj)/rcbfx_base.o
+
+$(obj)/GpakDsp0708.o: $(obj)/GpakDsp0708.fw $(obj)/rcbfx_base.o
+	@echo Making firmware object file for $(notdir $<)
+	@cd $(src) && ../build_tools/make_firmware_object $(notdir $<) $@ $(obj)/rcbfx_base.o
+
