@@ -85,7 +85,6 @@ ifndef RHINOPKGVER
   ifneq ($(wildcard .svn),)
     RHINOPKGVER:=SVN-$(shell build_tools/make_svn_branch_name)
   else
-    $(warning [$@ ($^) ($?)] $(DEBUG) $(shell pwd))
     ifneq ($(wildcard .version),)
     RHINOPKGVER:=$(shell cat .version)
     else
