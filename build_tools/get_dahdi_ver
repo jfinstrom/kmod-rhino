@@ -1,0 +1,42 @@
+#!/bin/sh
+# Return the DAHDI version has a KERNEL_VERSION string
+# (MAJOR * 65536) + (MINOR * 256) + REVISION
+# Broken out of the Makefile to simplify editing,
+# testing, and updates.
+# Original:
+#DAHDI_VER=$(shell if grep -q Private\ stuff \
+#       /usr/src/dahdi*/include/dahdi/kernel.h \
+#       /usr/include/dahdi*/kernel.h 2>/dev/null; \
+#       then echo -n 131838; \
+#       else echo -n 132094; \
+#       fi)
+# Dirty alternative:
+#if grep -q Private\ stuff \
+#	/usr/src/dahdi*/include/dahdi/kernel.h \
+#	/usr/include/dahdi*/kernel.h 2>/dev/null
+#then
+#	RET=131838
+#else
+#	RET=132096
+#fi
+
+RET=ERROR
+if ! modinfo dahdi 2>/dev/null >/dev/null
+then
+	echo "Module dahdi.ko is not installed"
+	exit 1
+fi
+
+exit 0
+
+MODVERSION=$(modinfo dahdi | egrep 'version:.*[0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}')
+DMAJOR=$(echo $MODVERSION | awk -F. '{print $1}')
+DMINOR=$(echo $MODVERSION | awk -F. '{print $2}')
+MODREVISION=$(echo $MODVERSION | awk -F. '{print $3}')
+
+DMAJOR=$((DMAJOR*65536))
+DMINOR=$((DMINOR*256))
+
+RET=$((DMAJOR+DMINOR+DREVISION))
+
+echo -n $RET
