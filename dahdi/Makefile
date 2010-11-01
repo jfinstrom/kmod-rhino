@@ -176,8 +176,7 @@ KMAKE=$(MAKE) -C $(KSRC) ARCH=$(ARCH) \
 		RHINO_INCLUDE=$(PWD)/include \
 		DAHDI_INCLUDE=$(DAHDI_DIR)/include \
 		DAHDI_SRC=$(DAHDI_DIR)/drivers/dahdi \
-		DAHDI_VER=$(SYS_DAHDI_VER) \
-		KBUILD_EXTRA_SYMBOLS=$(DAHDI_DIR)/drivers/dahdi/Module.symvers
+		DAHDI_VER=$(SYS_DAHDI_VER)
 
 #Default target
 all: modules
