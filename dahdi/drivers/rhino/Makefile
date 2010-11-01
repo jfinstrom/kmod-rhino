@@ -7,7 +7,7 @@ obj-m += r1t1/
 obj-m += rcbfx/
 obj-m += rxt1/
 
-CFLAGS_MODULE += -I$(DAHDI_INCLUDE) -I$(src) -I$(RHINO_INCLUDE) -DDAHDI_VER=$(DAHDI_VER)
+CFLAGS_MODULE += -I$(DAHDI_INCLUDE) -I$(src) -I$(RHINO_INCLUDE)
 
 ifndef HOTPLUG_FIRMWARE
 ifneq (,$(filter y m,$(CONFIG_FW_LOADER)))
