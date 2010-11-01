@@ -118,65 +118,12 @@ ifneq (,$(wildcard $(MYCONFIG)))
 endif
 
 
-# H'okay, so here we go
-#If DAHDI_DIR, use that
-#else if DAHDI_VER, use that
-#else Probe
-
-# User specified a DAHDI to compile against, use it
-ifdef DAHDI_DIR
-  $(info Probing $(DAHDI_DIR) for DAHDI version)
-  DAHDI_VERSION_H:=$(shell find $(DAHDI_DIR) -name version.h)
-  ifeq "$(DAHDI_VERSION_H)" ""
-    $(error Could not find version.h in your sources. Perhaps your install is incomplete? Or perhaps you tried pointing DAHDI_DIR to he /usr/include headers?)
-  else
-    $(info Found version.h at $(DAHDI_VERSION_H))
-  endif
-  DAHDI_VERSION_STRING:=$(shell grep DAHDI_VERSION $(DAHDI_VERSION_H) | head -n1)
-  ifeq "$(DEBUG)" "2"
-    $(info Version line: $(DAHDI_VERSION_STRING))
-  endif
-  DAHDI_VER:=$(shell echo '$(DAHDI_VERSION_STRING)' | awk -F\" '{print $$2}')
-  ifeq "$(DEBUG)" "2"
-    $(info Version extracted: $(DAHDI_VER))
-  endif
-  DMAJOR:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$1 }')
-  DMINOR:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$2 }')
-  DREVISION:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$3 }')
-  ifeq "$(DEBUG)" "2"
-    $(info DAHDI version MAJOR=$(DMAJOR) MINOR=$(DMINOR) REVISION=$(DREVISION))
-  endif
-  SYS_DAHDI_VER:=$(shell expr $(DMAJOR) \* 65536 + $(DMINOR) \* 256 + $(DREVISION))
-
-# User is overriding the version logic
-else ifdef DAHDI_VER
-  $(info Using user-defined version $(DAHDI_VER))
-  DMAJOR:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$1 }')
-  DMINOR:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$2 }')
-  DREVISION:=$(shell echo $(DAHDI_VER) | awk -F . '{ print $$3 }')
-  SYS_DAHDI_VER:=$(shell expr $(DMAJOR) \* 65536 + $(DMINOR) \* 256 + $(DREVISION))
-
-# Do our friendly modinfo probe
-else
-  $(info Asking modprobe for the version.)
-  SYS_DAHDI_VER:=$(shell build_tools/get_dahdi_ver)
-  ifeq "$(SYS_DAHDI_VER)" "Module dahdi.ko is not installed"
-    $(error $(SYS_DAHDI_VER))
-  endif
-
-#End version checks
-endif
-
-## Just a debugging message
-$(info Compiling against DAHDI version $(SYS_DAHDI_VER))
-
 #The make command used
 KMAKE=$(MAKE) -C $(KSRC) ARCH=$(ARCH) \
 		SUBDIRS=$(PWD)/drivers/rhino \
 		RHINO_INCLUDE=$(PWD)/include \
 		DAHDI_INCLUDE=$(DAHDI_DIR)/include \
 		DAHDI_SRC=$(DAHDI_DIR)/drivers/dahdi \
-		DAHDI_VER=$(SYS_DAHDI_VER) \
 		KBUILD_EXTRA_SYMBOLS=$(DAHDI_DIR)/drivers/dahdi/Module.symvers
 
 #Default target
