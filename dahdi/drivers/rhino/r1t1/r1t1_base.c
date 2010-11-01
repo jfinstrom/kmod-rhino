@@ -681,7 +681,7 @@ static int r1t1_spanconfig(struct dahdi_span *span, struct dahdi_lineconfig *lc)
 
 static int r1t1_software_init(struct r1t1 *rh)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	static struct dahdi_span_ops ops = {
 		.spanconfig = r1t1_spanconfig,
 		.chanconfig = r1t1_chanconfig,
@@ -702,7 +702,7 @@ static int r1t1_software_init(struct r1t1 *rh)
 	int x;
 
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	rh->span.ops = &ops;
 #else
 	rh->span.spanconfig = r1t1_spanconfig;
@@ -1959,7 +1959,7 @@ static int __devinit r1t1_card_init_dsp(struct r1t1 *rh)
 	printk("R1T1: %d DSP %d: %d channels configured\n", rh->num + 1, 1, chan_count);
 
 	rh->dsp_up = 1;
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 	rh->span.echocan_create = r1t1_echocan_create;
 #endif
 

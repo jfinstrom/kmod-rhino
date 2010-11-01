@@ -1065,7 +1065,7 @@ static void __rxt1_span_set_clear(struct rxt1_card_t *rxt1_card, int span)
 	}
 }
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 static int rxt1_zap_chan_dacs(struct dahdi_chan *zap_chan_dst,
 							  struct dahdi_chan *zap_chan_src)
 {
@@ -1153,7 +1153,7 @@ static int rxt1_zap_chan_ioctl(struct dahdi_chan *zap_chan, unsigned int cmd,
 	struct rxt1_regs regs;
 	int x;
 	size_t regs_size;
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = zap_chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -1226,7 +1226,7 @@ static void inline __rxt1_span_hdlc_xmit_fifo(struct rxt1_card_t *rxt1_card,
 #ifdef DAHDI_SIG_HARDHDLC
 static void rxt1_zap_chan_hdlc_hard_xmit(struct dahdi_chan *zap_chan)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = zap_chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -1250,7 +1250,7 @@ static void rxt1_zap_chan_hdlc_hard_xmit(struct dahdi_chan *zap_chan)
 
 static int rxt1_span_maint(struct dahdi_span *span, int cmd)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 #else
 	struct rxt1_span_t *rxt1_span = span->pvt;
@@ -1315,7 +1315,7 @@ static int rxt1_zap_chan_rbsbits(struct dahdi_chan *zap_chan, int bits)
 {
 	u_char m, c;
 	int k, n, b;
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = zap_chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -1375,7 +1375,7 @@ static int rxt1_span_shutdown(struct dahdi_span *span)
 	int span_num;
 	int wasrunning;
 	unsigned long flags;
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 #else
 	struct rxt1_span_t *rxt1_span = span->pvt;
@@ -1434,7 +1434,7 @@ static int rxt1_span_startup(struct dahdi_span *span);
 static int rxt1_spanconfig(struct dahdi_span *span, struct dahdi_lineconfig *spanconfig)
 {
 	int i;
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 #else
 	struct rxt1_span_t *rxt1_span = span->pvt;
@@ -1484,7 +1484,7 @@ static int rxt1_zap_chanconfig(struct dahdi_chan *zap_chan, int sigtype)
 {
 	int alreadyrunning;
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = zap_chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -1555,7 +1555,7 @@ static int rxt1_zap_chan_close(struct dahdi_chan *zap_chan)
 	return 0;
 }
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 static struct dahdi_span_ops ops_with_echocan = {
 	.spanconfig = rxt1_spanconfig,
 	.chanconfig = rxt1_zap_chanconfig,
@@ -1606,7 +1606,7 @@ static void rxt1_card_init_spans(struct rxt1_card_t *rxt1_card)
 				rxt1_card->num, span_num + 1);
 		rxt1_span->span.manufacturer = "Rhino Equipment";
 
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 		rxt1_span->span.spanconfig = rxt1_spanconfig;
 		rxt1_span->span.chanconfig = rxt1_zap_chanconfig;
 		rxt1_span->span.startup = rxt1_span_startup;
@@ -1671,7 +1671,7 @@ static void rxt1_card_init_spans(struct rxt1_card_t *rxt1_card)
 		rxt1_span->span.chans = rxt1_span->chans;
 		rxt1_span->span.flags = DAHDI_FLAG_RBS;
 
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 		if (rxt1_span->dsp_up == 1)
 			rxt1_span->span.echocan_create = rxt1_echocan_create;
 #else
@@ -1683,7 +1683,7 @@ static void rxt1_card_init_spans(struct rxt1_card_t *rxt1_card)
 
 		rxt1_span->owner = rxt1_card;
 		rxt1_span->span.offset = span_num;
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 		rxt1_span->span.pvt = rxt1_span;
 #endif
 		rxt1_span->writechunk = (void *) (rxt1_card->writechunk + span_num * 32 * 2);
@@ -1708,7 +1708,7 @@ static void rxt1_card_init_spans(struct rxt1_card_t *rxt1_card)
 				DAHDI_SIG_FXOLS | DAHDI_SIG_FXOGS | DAHDI_SIG_FXOKS | DAHDI_SIG_CAS |
 				DAHDI_SIG_EM_E1 | DAHDI_SIG_DACS_RBS;
 
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 			rxt1_span->chans[chan_num]->pvt = rxt1_card;
 #endif
 			rxt1_span->chans[chan_num]->chanpos = chan_num + 1;
@@ -2346,7 +2346,7 @@ static int rxt1_span_startup(struct dahdi_span *span)
 	int tspan;
 	int alreadyrunning;
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 #else
 	struct rxt1_span_t *rxt1_span = span->pvt;
@@ -4056,7 +4056,7 @@ static int rxt1_echocan_create(struct dahdi_chan *chan, struct dahdi_echocanpara
 							   struct dahdi_echocanparam *p,
 							   struct dahdi_echocan_state **ec)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -4099,7 +4099,7 @@ static int rxt1_echocan_create(struct dahdi_chan *chan, struct dahdi_echocanpara
 
 static void rxt1_echocan_free(struct dahdi_chan *chan, struct dahdi_echocan_state *ec)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	struct dahdi_span *span = chan->span;
 	struct rxt1_span_t *rxt1_span = container_of(span, struct rxt1_span_t, span);
 	struct rxt1_card_t *rxt1_card = rxt1_span->owner;
@@ -4323,7 +4323,7 @@ static int __devinit rxt1_card_init_dsp(struct rxt1_card_t *rxt1_card)
 
 	for (span_num = 0; span_num < rxt1_card->numspans; span_num++) {
 		rxt1_card->rxt1_spans[span_num]->dsp_up = 1;
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 		/* we have to coerce the ops pointer to remove the const, because we 
 		 *  don't necessarily know what this pointer was supposed to be until now. */
 		((struct dahdi_span_ops *)

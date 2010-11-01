@@ -604,7 +604,7 @@ static int rcb_dahdi_chan_close(struct dahdi_chan *chan)
 
 static int rcb_card_initialize(struct rcb_card_t *rcb_card)
 {
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	static struct dahdi_span_ops ops = {
 		.rbsbits = rcb_dahdi_chan_rbsbits,
 		.open = rcb_dahdi_chan_open,
@@ -657,7 +657,7 @@ static int rcb_card_initialize(struct rcb_card_t *rcb_card)
 		}
 
 		rcb_card->chans[chan_num]->chanpos = chan_num + 1;
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 		rcb_card->chans[chan_num]->pvt = rcb_card;
 #endif
 	}
@@ -668,7 +668,7 @@ static int rcb_card_initialize(struct rcb_card_t *rcb_card)
 	rcb_card->span.flags = DAHDI_FLAG_RBS;
 	init_waitqueue_head(&rcb_card->span.maintq);
 
-#if DAHDI_VER >= KERNEL_VERSION(2,4,0)
+#ifdef DAHDI_ALARM_LMFA
 	rcb_card->span.ops = &ops;
 #else /* DAHDI_VER < KERNEL_VERSION(2,4,0) */
 	rcb_card->span.rbsbits = rcb_dahdi_chan_rbsbits;
@@ -1624,7 +1624,7 @@ static int rcb_card_dsp_init(struct rcb_card_t *rcb_card)
 	INIT_WORK(&rcb_card->work, echocan_bh);
 #endif
 
-#if DAHDI_VER < KERNEL_VERSION(2,4,0)
+#ifndef DAHDI_ALARM_LMFA
 	rcb_card->span.echocan_create = rcbfx_echocan_create;
 #endif
 
